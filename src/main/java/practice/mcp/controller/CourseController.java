@@ -32,11 +32,11 @@ public class CourseController {
 
     @GetMapping("/add")
     public ModelAndView addCourse(HttpSession session, ModelAndView mv) {
-        // 메소드 이름은 addCourse야. 두 개의 정보를 받아: 세션(session)과 ModelAndView(mv).
-        // session은 사용자에 대한 정보를 담고 있고, ModelAndView는 웹 페이지를 만들 때 필요한 도구야.
+        // 메소드 이름은 addCourse 야. 두 개의 정보를 받아: 세션(session)과 ModelAndView(mv).
+        // session 은 사용자에 대한 정보를 담고 있고, ModelAndView 는 웹 페이지를 만들 때 필요한 도구야.
 
         mv.addObject("username", session.getAttribute("username"));
-            // 여기서는 ModelAndView에 "username"이라는 정보를 추가해.
+            // 여기서는 ModelAndView 에 "username"이라는 정보를 추가해.
             // 이 정보는 세션에서 가져온 "username"에 해당해.
 
         mv.setViewName("/course/add");
@@ -61,20 +61,32 @@ public class CourseController {
         List<SectionDTO> sectionDTOList = new ArrayList<>();
         // 여기서는 섹션들의 정보를 저장하기 위한 목록을 만들어. 이 목록에는 새로운 섹션들의 정보를 추가할 수 있어.
 
-        /*  List 는 데이터를 순서대로 저장하는 방법을 정의한 인터페이스이고,
-            ArrayList 는 그 인터페이스를 구현한 클래스 중 하나입니다.
-            따라서 ArrayList 는 List 의 규칙을 따르며, List 로 선언된 변수에 할당할 수 있습니다.
-
-            여기서 ArrayList 를 사용하는 이유: 가변 크기
-            -> ArrayList 는 배열을 기반으로 하며, 내부적으로 크기를 동적으로 조절할 수 있어요.
-            즉, 필요에 따라 요소를 추가하거나 제거할 수 있어요. */
+        /*  new ArrayList<>()는 새로운 ArrayList 객체를 생성하는 것이에요.
+        이 코드에서 ArrayList 를 새로 만드는 이유는 새로운 섹션 정보 목록을 만들기 위해서에요.
+        여기서 sectionDTOList 는 섹션 정보를 담는 리스트인데,
+        새로운 코스가 추가될 때마다 해당 코스에 대한 섹션 정보를 담는 새로운 리스트를 생성해야 해요.
+        그래서 new ArrayList<>()를 사용해서 새로운 비어있는 리스트를 만들어요.
+        이렇게 하면 새로운 코스에 대한 섹션 정보를 새로운 리스트에 담을 수 있고,
+        기존의 코스와 섹션 정보들과 구분하여 관리할 수 있게 되요. */
 
         Map<String, String[]> parameters = request.getParameterMap();
         //  HTTP 요청에서 받은 파라미터들을 정리한 목록을 만들어. 이 목록에는 사용자가 입력한 정보들이 있을 거야.
 
-        /*  'Map<String, String[]>' 은 파라미터의 이름을 키로 하고,
-            해당 파라미터의 값들을 문자열 배열로 담고 있는 맵을 나타내는 것이에요.
-            이를 통해 여러 개의 값이 전달된 경우에도 모두 처리할 수 있게 됩니다. */
+            /* request.getParameterMap()을 사용하는 이유는
+            클라이언트가 POST 요청을 통해 전달한 파라미터들을 가져오기 위해서에요.
+
+            HTTP POST 요청은 클라이언트가 서버로 데이터를 전송할 때 사용되는 방식 중 하나에요.
+            이때 클라이언트가 전송한 데이터는 URL 에 직접 붙어서 전송되는 것이 아니라,
+            HTTP 요청의 본문(body)에 담겨서 전송돼요. 이 본문에는 여러 가지 데이터들이 포함될 수 있고,
+            이를 파라미터(parameter)라고 해요.
+
+            request.getParameterMap()은 이런 파라미터들을 맵(Map) 형태로 가져오는 메서드에요.
+            여기서 맵의 키(key)는 파라미터의 이름이 되고, 값(value)은 파라미터의 값들을 문자열 배열로 담고 있어요.
+            이렇게 하면 하나의 파라미터 이름에 여러 개의 값이 전달된 경우에도 모두 처리할 수 있게 되는 거에요.
+
+            따라서, Map<String, String[]> parameters = request.getParameterMap();은
+            클라이언트가 전달한 파라미터들을 맵으로 가져와서 변수에 담는 것이에요.
+            이를 통해 후속 처리에서 이 파라미터들을 사용할 수 있게 되는 거죠. */
 
         SectionDTO sectionDTO = new SectionDTO();
         // 새로운 섹션 정보를 저장하기 위한 새로운 종이를 만들어. 이 종이에는 새로운 섹션에 대한 정보를 입력할 수 있겠지.
@@ -89,12 +101,24 @@ public class CourseController {
                 sectionDTO = new SectionDTO();
                 // 새로운 섹션을 생성하고 그 정보를 저장할 준비
 
+                    /*
+                    SectionDTO sectionDTO = new SectionDTO();은 새로운 SectionDTO 객체를 생성하고,
+                    그것을 sectionDTO 라는 변수에 할당하는 것이에요.
+                    이것은 새로운 객체를 생성하고 그것을 변수에 처음으로 할당하는 과정이에요.
+
+                    sectionDTO = new SectionDTO();는
+                    이미 생성된 sectionDTO 변수에 새로운 SectionDTO 객체를 할당하는 것이에요.
+                    이 경우, 기존에 sectionDTO 변수에 다른 객체가 할당되어 있었다면
+                    그 객체는 더 이상 참조되지 않게 되어 메모리에서 삭제될 수 있어요.
+                    이것은 기존에 할당된 객체를 더 이상 사용하지 않고 새로운 객체로 교체하는 과정이에요. */
+
+
                 String startTime = Arrays.toString(parameters.get(key)).replace(":","")
                         .replace("[","").replace("]","");
 
                 // parameters.get(key)는 특정 키에 해당하는 값(value)을 가져오는 것
                 // ':' 및 문자열의 시작과 끝에 있는 [] 제거
-                // 즉, String startTime은 시간을 나타내는 문자열을 ":"와 대괄호 "[" "]"를 없앤 형태로 저장한 것
+                // 즉, String startTime 은 시간을 나타내는 문자열을 ":"와 대괄호 "[" "]"를 없앤 형태로 저장한 것
 
                 sectionDTO.setStartTime(Integer.parseInt(startTime));
                 // 문자열로 된 시작 시간을 정수로 변환. startTime은 문자열로 된 시작 시간을 나타내는 변수
