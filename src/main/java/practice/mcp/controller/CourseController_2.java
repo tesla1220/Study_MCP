@@ -27,20 +27,13 @@ public class CourseController_2 {
         this.CourseServie = courseService;
     }
 
-    @GetMapping("/add")
-    public ModelAndView addCourse(HttpSession httpSession, ModelAndView mv){
-        mv.addObject("username", httpSession.getAttribute("username"));
+   @GetMapping("/add")
+    public ModelAndView addCourse(HttpSession session, ModelAndView mv){
+
+        mv.addObject("username", session.getAttribute("username"));
         mv.setViewName("/course/add");
+
         return mv;
-    }
-
-    @PostMapping("/add")
-    public String addCourse(String courseName, HttpSession httpSession, HttpServletRequest request){
-
-        CourseDTO courseDTO = new CourseDTO();
-        courseDTO.setCourseName(courseName);
-        List<SectionDTO> sectionDTOList = new ArrayList<>();
-        Map<String, String[]> paratemers = request.getParameterMap();
 
 
     }
