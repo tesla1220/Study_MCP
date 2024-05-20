@@ -181,7 +181,7 @@ public class CourseController {
         //  코스 정보 객체(courseDTO)에 회원 코드를 설정합니다.
         //  이를 통해 어떤 회원이 해당 코스를 생성했는지를 알 수 있게 됩니다.
 
-        courseService.addCourse(courseDTO);
+//        courseService.addCourse(courseDTO);
 
         return "/course/course";
     }
