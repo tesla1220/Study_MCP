@@ -37,10 +37,25 @@ public class BoardController {
         //HttpSession session: 현재 세션 정보를 담고 있는 객체입니다
 
         Integer totalRecord = boardService.totalRecord();
-        // 총 레코드 수를 boardService를 통해 조회합니다.
+        // totalRecord 변수에 총 게시글 수를 저장합니다.
+        // boardService.totalRecord() 는 데이터베이스에서 총 게시물 수를 가져오는 메소드
+
 
         int totalPage = 1;
-        // 총 페이지 수를 초기화합니다. 실제로는 총 레코드 수에 따라 계산되어야 합니다. 현재는 하드코딩된 값
+        // totalPage 라는 변수에 초기 값으로 1을 설정. 이 변수는 총 페이지수를 나타냄
+
+        if(totalRecord != 0){
+            // 총 게시글 수가 0이 아닌 경우에 대한 조건 문 시작. 즉 게시물이 하나라도 있을 때만 아래 로직 수행
+
+            totalPage = totalRecord / 10 ;
+            // 총 게시글 수를 10으로 나누어 totalPage 에 저장.
+            // 한 페이지에 10개 게시물이 있다고 가정할 때 총페이지 수를 계산하는 방법
+
+            if(totalRecord % 10 != 0) totalPage++;
+            // totalRecord % 10 은 게시물 수를 10을 나눈 나머지를 계산
+            // 나머지가 0이 아닌 경우, totalPage 를 1을 증가시킴
+
+        }
 
         String username = (String) session.getAttribute("username");
         // 세션에서 사용자 이름을 가져옵니다.
@@ -48,8 +63,9 @@ public class BoardController {
         int memberCode = (int) session.getAttribute("memeberCode");
         // 세션에서 회원 코드를 가져옵니다.
 
-        List<BoardDTO> boardDTOList = boardService.findAll(page);
-        // 현재 페이지의 게시글 목록을 조회합니다.
+        List<BoardDTO> boardDTOList = boardService.findAll(page* 10);
+        // 현재 페이지에 해당하는 게시글 목록을 가져옵니다.
+        // 여기서 page * 10 은 SQL 의 OFFSET과 유사하게 동작해 해당 페이지의 첫 게시글 위치를 지정합니다.
 
         model.addAttribute("boardPage", boardDTOList);
         // 모델에 게시글 목록을 추가합니다.
@@ -63,6 +79,7 @@ public class BoardController {
     }
 
     /* 게시글 상세 조회 */
+    @GetMapping("/board/view")
     public String viewBoard(int boardNo, Model model, HttpSession session){
         // int boardNo: 조회할 게시글 번호입니다.
         // Model model: 뷰에 데이터를 전달하기 위해 사용합니다.
@@ -97,6 +114,8 @@ public class BoardController {
         return "board/view";
 
     }
+
+
 
 
 }
